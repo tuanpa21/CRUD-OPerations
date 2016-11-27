@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>CRUD OPERATIONS</title>
+
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+  </head>
+  <body>
+
+    <div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="page-header">
+				<h1>
+					CRUD Operations Using Knockout
+				</h1>
+			</div>
+		</div>
+	</div>
+	<div class="row item-list">
+		<div class="col-md-12 end-item">
+			<h3>
+				Items list
+			</h3>
+			<!--<div class="row">
+				<div class="col-md-1">
+					<ul>
+						<li>
+							<b>STT</b>
+						</li>
+						<li>
+							1
+						</li>
+						<li>
+							2
+						</li>
+						<li>
+							3
+						</li>
+						
+					</ul>
+				</div>
+				<div class="col-md-3">
+					<ul>
+						<li>
+							<b>Title</b>
+						</li>
+						<li>
+							Levi's Tshirt
+						</li>
+						<li>
+							LED
+						</li>
+						<li>
+							Addidas ZigZag
+						</li>
+						
+					</ul>
+				</div>
+				<div class="col-md-2">
+					<ul>
+						<li>
+							<b>Class</b>
+						</li>
+						<li>
+							Clothes
+						</li>
+						<li>
+							Electronics
+						</li>
+						<li>
+							Shoes
+						</li>
+						
+					</ul>
+				</div>
+				<div class="col-md-2">
+					<ul>
+						<li>
+							<b>Cost</b>
+						</li>
+						<li>
+							$20.00
+						</li>
+						<li>
+							$700.00
+						</li>
+						<li>
+							$25.00
+						</li>
+						
+					</ul>
+				</div>
+				<div class="col-md-4">
+					<ul>
+					<li>
+						<b>Actions</b>
+					</li>
+					<li class="top-space"><button type="button" class="btn btn-primary">Edit</button>
+					<button type="button" class="btn btn-primary">Delete</button></br>
+					</li>
+					<li class="top-space"><button type="button" class="btn btn-primary">Edit</button>
+					<button type="button" class="btn btn-primary">Delete</button></br>
+					</li>
+					<li class="top-space"><button type="button" class="btn btn-primary">Edit</button>
+					<button type="button" class="btn btn-primary">Delete</button></br>
+					</li>
+					</ul>
+				</div>
+			</div>-->
+			<table id="productTable">
+				<tr>
+					<th>STT</th>
+					<th>Title</th>
+					<th>Class</th>
+					<th>Cost</th>
+					<th>Actions</th>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>Levi's Tshirt</td>
+					<td>Clothes</td>
+					<td>$20.00</td>
+					<td>
+						<button type="button" onclick="productDisplay(this);" class="btn btn-primary">Edit</button>
+						<button type="button" class="btn btn-primary" onclick="productDelete(this);">Delete</button>
+					</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td>LED</td>
+					<td>Electronics</td>
+					<td>$700.00</td>
+					<td>
+						<button type="button" class="btn btn-primary" onclick="productDisplay(this);">Edit</button>
+						<button type="button" class="btn btn-primary" onclick="productDelete(this);">Delete</button>
+					</td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td>Addidas ZigZag</td>
+					<td>Shoes</td>
+					<td>$25.00</td>
+					<td>
+						<button type="button" class="btn btn-primary" onclick="productDisplay(this);">Edit</button>
+						<button type="button" class="btn btn-primary" onclick="productDelete(this);">Delete</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<h2>
+				<b>Add item</b>
+			</h2>
+			<p>Title  <input type="text" name="title" id="Title" class="item" style="margin-left: 8px;"></p>
+			<p>Class <input type="text" name="class" id="Class" class="item"></p>
+			<p>Cost   <input type="number" name="cost" id="Cost" class="item" style="margin-left: 6px;"></p>
+			<button type="button" class="btn btn-primary" id="updateButton" onclick="productUpdate();">ADD</button>
+			
+		</div>
+	</div>
+</div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/scripts.js"></script>
+    <script type="text/javascript">
+    	//current product being edited
+    	var editRow = null;
+    	function productDisplay(ctl) {
+    		editRow = $(ctl).parent().parent();
+    		var cols = editRow.children("td");
+
+    		$("#Title").val($(cols[1]).text());
+    		$("#Class").val($(cols[2]).text());
+    		$("#Cost").val($(cols[3]).text());
+
+    		//change Update Button Text
+    		$("#updateButton").text("Update");
+    	}
+
+
+    	function productUpdate() {
+    		if ($("#updateButton").text() == "Update") {
+    			productUpdateInTable();
+    		}
+    		else {
+    			productAddToTable();
+    		}
+
+    		//clear from field
+    		formClear();
+
+    		//Focus to title name field
+    		$("#Title").focus();
+    	}
+
+    	//Add product to <table>
+    	function productAddToTable() {
+     	//First check the tbody tag is exist or not
+     		if ($("#productTable tbody").length == 0) {
+     			$("#productTable").append("<tbody></tbody>");
+     		}
+     		//Append product to Table
+     		$("#productTable").append(productBuildTableRow())
+     		//add index, auto đánh số thứ tự
+     		var index = 1;
+	     		$('td:first-child').each(function() {
+	     			$(this).text(index);
+	     			index++;
+	     		})
+
+     		}
+     		//Update product in <table>
+     		function productUpdateInTable() {
+     			//Add changed product to table
+     			$(editRow).after(productBuildTableRow());
+     			//Remove original product
+     			$(editRow).remove();
+     			//Clear from field
+     			formClear();
+
+     			//Change Update Button to Add
+     			$("#updateButton").text("ADD");
+     		}
+
+     		//Build a table row from Product data
+     		function productBuildTableRow() {
+				if ($("#Title").val() == null || $("#Title").val() == "") {
+					alert("Bạn nhập thiếu");
+					return false;
+				}
+				else if ($("#Class").val() == null || $("#Class").val() == "") {
+					alert("Bạn nhập thiếu");
+					return false;
+				}
+				else if ($("#Cost").val() == null || $("#Cost").val() == "") {
+					alert("Bạn nhập thiếu");
+					return false;
+				}
+				else {
+     			var ret = "<tr>" + "<td>" +"1" + "</td>" + "<td>" + $("#Title").val() + "</td>" +
+     				"<td>" + $("#Class").val() + "</td>" +
+     				"<td>" + "$" +  $("#Cost").val() + "</td>" + "<td>" +
+     				"<button type='button'" + "class='btn btn-primary'" + "onclick='productDisplay(this);'>" + "Edit" + "</button>" 
+     			+ " " + "<button type='button'" + "class='btn btn-primary'" + "onclick='productDelete(this);'>" + "Delete" + "</button>" +
+     				"</td>" + "</tr>"
+
+     			return ret;
+				}
+     		}
+     		//Clear from field
+     		function formClear() {
+     			$("#Title").val("");
+     			$("#Class").val("");
+     			$("#Cost").val("");
+     		}
+     		//Delete product from <table>
+     		function productDelete(ctl) {
+      		$(ctl).parents("tr").remove();
+      		//add index
+      			var index = 1;
+      			$('td:first-child').each(function() {
+	     			$(this).text(index);
+	     			index++;
+	     		})
+   			 }
+    	
+    </script>
+  </body>
+</html>
